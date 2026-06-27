@@ -1,0 +1,38 @@
+# Repository settings managed as code
+# See: https://github.com/probot/settings
+
+repository:
+  name: firmes
+  description: Directorio de negocios con apoyo público declarado
+  homepage: https://firmes.github.io
+  topics:
+    - awesome-list
+    - colombia
+    - directorio
+  private: false
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+  has_downloads: false
+  default_branch: main
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
+  delete_branch_on_merge: true
+
+# Branch protection rules
+branches:
+  - name: main
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        require_last_push_approval: true
+      required_status_checks:
+        strict: true
+        contexts:
+          - "Validate Data"
+      enforce_admins: false
+      required_linear_history: true
+      restrictions: null

@@ -1,0 +1,45 @@
+fuente_id,titulo,url,fecha,medio_autor,nota,url_archivo
+# ============================================================================
+# FUENTES.CSV - Formato y ejemplos
+# ============================================================================
+#
+# COLUMNAS:
+# ---------
+# fuente_id   : Identificador único (ej: f-001, f-002). Referenciado desde negocios.csv
+# titulo      : Título descriptivo de la fuente
+# url         : URL original de la fuente
+# fecha       : Fecha de publicación (formato libre: 2024-01-15, Enero 2024, etc.)
+# medio_autor : Nombre del medio o autor (ej: El Tiempo, RCN Radio, @usuario)
+# nota        : Nota adicional opcional (contexto, aclaración)
+# url_archivo : URL de Wayback Machine - OBLIGATORIO si evidencia=Prensa
+#
+# ============================================================================
+# EJEMPLOS DE DECLARACIÓN PROPIA (url_archivo opcional)
+# ============================================================================
+f-001,Publicación oficial de apoyo,https://instagram.com/p/ejemplo123,2024-03-15,Instagram @almacenesejemplo,Post oficial en redes,
+f-004,Historia de Instagram confirmando apoyo,https://instagram.com/stories/elsabor/123,2024-02-20,Instagram @elsabor,Historia destacada,
+f-007,Tweet de apoyo oficial,https://x.com/cafearoma/status/123456,2024-04-10,X @cafearoma,Declaración del gerente,
+# ============================================================================
+# EJEMPLOS DE PRENSA (url_archivo OBLIGATORIO - debe ser web.archive.org)
+# ============================================================================
+f-002,TechCorp anuncia respaldo a campaña,https://eltiempo.com/tecnologia/techcorp-apoyo,2024-01-20,El Tiempo,Sección Tecnología,https://web.archive.org/web/20240125/https://eltiempo.com/tecnologia/techcorp-apoyo
+f-005,Bar La Rumba en evento de apoyo,https://rcnradio.com/bogota/bar-rumba-evento,2024-02-28,RCN Radio,Nota de entretenimiento,https://web.archive.org/web/20240301/https://rcnradio.com/bogota/bar-rumba-evento
+f-006,Entrevista con dueño de Bar La Rumba,https://semana.com/entretenimiento/entrevista-bar,2024-03-05,Revista Semana,Sección Entretenimiento,https://web.archive.org/web/20240310/https://semana.com/entretenimiento/entrevista-bar
+f-009,Hotel Caribe patrocina evento,https://elheraldo.co/barranquilla/hotel-caribe,2024-05-12,El Heraldo,Sección Local,https://web.archive.org/web/20240515/https://elheraldo.co/barranquilla/hotel-caribe
+# ============================================================================
+# EJEMPLOS DE EVENTO PÚBLICO (url_archivo recomendado pero no obligatorio)
+# ============================================================================
+f-003,Participación en foro empresarial,https://youtube.com/watch?v=evento123,2024-04-01,YouTube Foro Empresarial,Video del evento,
+f-008,Presencia en feria tecnológica,https://feriatec.co/expositores/softwarevalley,2024-06-15,Feria TEC Colombia,Stand confirmado,
+# ============================================================================
+# CÓMO OBTENER URL DE WAYBACK MACHINE:
+# 1. Vaya a https://web.archive.org/save
+# 2. Pegue la URL original del artículo
+# 3. Haga clic en "Save Page"
+# 4. Copie la URL resultante (empieza con https://web.archive.org/web/...)
+#
+# IMPORTANTE:
+# - El fuente_id debe ser único
+# - Si evidencia=Prensa en negocios.csv, url_archivo es OBLIGATORIO
+# - url_archivo DEBE empezar con https://web.archive.org/
+# ============================================================================

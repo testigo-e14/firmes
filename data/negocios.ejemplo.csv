@@ -1,0 +1,45 @@
+ambito,ciudad,categoria,nombre,logo,redes,evidencia,fuente_ids
+# ============================================================================
+# NEGOCIOS.CSV - Formato y ejemplos
+# ============================================================================
+#
+# COLUMNAS:
+# ---------
+# ambito      : "Nacional" o "Regional"
+# ciudad      : Vacío si Nacional, nombre de ciudad si Regional (ej: Bogotá, Medellín)
+# categoria   : Categoría del negocio (ej: Restaurantes, Bares, Tecnología)
+# nombre      : Nombre comercial o razón social
+# logo        : Ruta local (assets/logos/slug.png), URL externa (https://...), o vacío
+# redes       : Formato "plataforma=url;plataforma2=url2" - Plataformas: instagram, x, facebook, tiktok, youtube, web
+# evidencia   : "Declaración propia", "Prensa", "Evento público" (NUNCA "Por determinar" para publicar)
+# fuente_ids  : IDs separados por ; que existen en fuentes.csv (ej: f-001;f-002)
+#
+# ============================================================================
+# EJEMPLOS NACIONALES (ciudad vacía)
+# ============================================================================
+Nacional,,Grandes Superficies,Almacenes Ejemplo,assets/logos/almacenes-ejemplo.png,instagram=https://instagram.com/ejemplo;web=https://ejemplo.com,Declaración propia,f-001
+Nacional,,Tecnología,TechCorp Colombia,https://techcorp.co/logo.png,x=https://x.com/techcorp;web=https://techcorp.co,Prensa,f-002
+Nacional,,Consultoría,Consultores Asociados,,web=https://consultores.co,Evento público,f-003
+# ============================================================================
+# EJEMPLOS REGIONALES (requieren ciudad)
+# ============================================================================
+Regional,Bogotá,Restaurantes,Restaurante El Sabor,assets/logos/restaurante-el-sabor.png,instagram=https://instagram.com/elsabor;facebook=https://facebook.com/elsabor,Declaración propia,f-004
+Regional,Bogotá,Bares,Bar La Rumba,,instagram=https://instagram.com/barlarumba,Prensa,f-005;f-006
+Regional,Medellín,Cafeterías,Café Aroma,https://cafearoma.co/logo.png,instagram=https://instagram.com/cafearoma;tiktok=https://tiktok.com/@cafearoma,Declaración propia,f-007
+Regional,Cali,Tecnología,Software Valley,,web=https://softwarevalley.co,Evento público,f-008
+Regional,Barranquilla,Hotelería,Hotel Caribe,assets/logos/hotel-caribe.png,instagram=https://instagram.com/hotelcaribe;youtube=https://youtube.com/@hotelcaribe,Prensa,f-009
+# ============================================================================
+# TIPOS DE LOGO:
+# - Vacío: Se genera badge con iniciales automáticamente
+# - assets/logos/nombre-slug.png: Archivo local (40x40px recomendado)
+# - https://...: URL externa de imagen
+#
+# TIPOS DE EVIDENCIA:
+# - "Declaración propia": El negocio declaró públicamente su apoyo
+# - "Prensa": Reportado en medios (REQUIERE url_archivo en fuentes.csv)
+# - "Evento público": Participación en evento público documentado
+#
+# IMPORTANTE:
+# - "Por determinar" solo va en borradores.csv (NUNCA se publica)
+# - Toda entrada DEBE tener al menos un fuente_id válido
+# ============================================================================

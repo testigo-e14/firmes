@@ -1,0 +1,3 @@
+# Dependencias para generador firmes
+# Colación Unicode UCA para orden alfabético portable (no depende de locale del sistema)
+pyuca==1.2

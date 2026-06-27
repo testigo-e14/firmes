@@ -1,0 +1,43 @@
+name: Proponer Negocio
+description: Proponga un negocio para incluir en el directorio
+title: "[Propuesta]: "
+labels: ["propuesta"]
+body:
+  - type: input
+    id: nombre
+    attributes:
+      label: Nombre del negocio
+      placeholder: "Ej. Restaurante El Sabor"
+    validations:
+      required: true
+  - type: dropdown
+    id: ambito
+    attributes:
+      label: Ámbito
+      options:
+        - Nacional
+        - Regional
+    validations:
+      required: true
+  - type: input
+    id: ciudad
+    attributes:
+      label: Ciudad (si es Regional)
+      placeholder: "Ej. Bogotá"
+  - type: input
+    id: categoria
+    attributes:
+      label: Categoría
+      placeholder: "Ej. Restaurantes"
+    validations:
+      required: true
+  - type: textarea
+    id: fuente
+    attributes:
+      label: Fuente que verifica el apoyo público
+      description: |
+        Proporcione un enlace a la fuente que verifica el apoyo público.
+        Puede ser una noticia, un tweet, una declaración, etc.
+      placeholder: "https://..."
+    validations:
+      required: true

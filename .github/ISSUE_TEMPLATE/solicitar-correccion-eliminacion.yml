@@ -1,0 +1,37 @@
+name: Solicitar Corrección o Eliminación
+description: Solicite corregir o eliminar información
+title: "[Solicitud]: "
+labels: ["solicitud"]
+body:
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo de solicitud
+      options:
+        - Corrección de información
+        - Eliminación de entrada
+    validations:
+      required: true
+  - type: input
+    id: negocio
+    attributes:
+      label: Nombre del negocio afectado
+      placeholder: "Ej. Restaurante El Sabor"
+    validations:
+      required: true
+  - type: textarea
+    id: motivo
+    attributes:
+      label: Motivo de la solicitud
+      description: |
+        Explique por qué solicita la corrección o eliminación.
+        Incluya evidencia si es posible.
+    validations:
+      required: true
+  - type: checkboxes
+    id: relacion
+    attributes:
+      label: Relación con el negocio
+      options:
+        - label: Soy el propietario o representante legal
+        - label: Soy un tercero con información correcta

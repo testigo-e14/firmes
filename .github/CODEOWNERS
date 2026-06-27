@@ -1,0 +1,13 @@
+# Code owners para el proyecto firmes
+
+# Datos - requiere revisión del mantenedor de datos
+data/** @mantenedor-datos
+
+# Logos - requiere verificación de uso nominativo
+assets/logos/** @mantenedor-datos
+
+# Configuración de GitHub - requiere admin
+.github/** @admin-repo
+
+# Scripts - requiere revisión técnica
+scripts/** @dev-team
