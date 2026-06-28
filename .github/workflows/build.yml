@@ -1,0 +1,206 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'scripts/**'
+      - 'assets/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'scripts/**'
+      - 'assets/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # ============================================================================
+  # Job: validate
+  # En pull_request, valida datos sin commitear cambios
+  # ============================================================================
+  validate:
+    name: Validate Data
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate markdown
+        run: python scripts/generate.py
+
+      - name: Validate
+        run: python scripts/validate.py
+
+  # ============================================================================
+  # Job: regenerate
+  # En push a main, regenera markdown y abre PR si hay cambios
+  # Anti-loop: no ejecutar si el actor es github-actions[bot]
+  # ============================================================================
+  regenerate:
+    name: Regenerate Markdown
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate markdown
+        run: python scripts/generate.py
+
+      - name: Validate
+        run: python scripts/validate.py
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet README.md regionales/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: regenerar markdown desde CSV'
+          title: '[Bot] Regenerar markdown'
+          body: |
+            ## Cambios automáticos
+
+            Este PR fue generado automáticamente por el workflow de CI
+            después de detectar cambios en los datos.
+
+            ### Verificación
+            - [ ] Los cambios reflejan correctamente los datos del CSV
+            - [ ] No hay información sensible expuesta
+
+            ---
+            *Generado por GitHub Actions*
+          branch: bot/regenerar-md
+          delete-branch: true
+          labels: bot,automerge
+
+  # ============================================================================
+  # Job: protection-drift
+  # Verifica que branch protection coincida con settings.yml
+  # ============================================================================
+  protection-drift:
+    name: Check Branch Protection
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check protection settings
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_READ_TOKEN }}
+        run: |
+          # Si no hay token de admin, skip silenciosamente
+          if [ -z "$GH_TOKEN" ]; then
+            echo "ADMIN_READ_TOKEN not configured, skipping protection check"
+            exit 0
+          fi
+
+          # Obtener protección actual
+          PROTECTION=$(gh api repos/${{ github.repository }}/branches/main/protection 2>/dev/null || echo '{}')
+
+          # Verificar configuraciones clave
+          REQUIRE_PR=$(echo "$PROTECTION" | jq -r '.required_pull_request_reviews // empty')
+          if [ -z "$REQUIRE_PR" ]; then
+            echo "::warning::Branch protection: required_pull_request_reviews not configured"
+          fi
+
+          CODEOWNERS=$(echo "$PROTECTION" | jq -r '.required_pull_request_reviews.require_code_owner_reviews // false')
+          if [ "$CODEOWNERS" != "true" ]; then
+            echo "::warning::Branch protection: require_code_owner_reviews is not enabled"
+          fi
+
+          echo "Branch protection check completed"
+
+  # ============================================================================
+  # Job: pages
+  # Deploy a GitHub Pages
+  # ============================================================================
+  pages:
+    name: Deploy to Pages
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [validate]
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate site
+        run: |
+          python scripts/generate.py
+          # Copiar assets necesarios para Pages
+          mkdir -p _site
+          cp README.md _site/index.md
+          cp -r assets _site/
+          cp -r regionales _site/ 2>/dev/null || true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
